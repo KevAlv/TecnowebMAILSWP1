@@ -12,19 +12,21 @@ import java.sql.SQLException;
 
 /**
  *
- * @author Jorge Luis Urquiza
+ *
  */
 public class DetalleVenta {
 
     private int producto_id;
     private int venta_id;
     private int cantidad;
+    private int promocion_id;
 
     private Conexion m_conexion;
 
-    public void setDetalleVenta(int producto_id, int cantidad) {
+    public void setDetalleVenta(int producto_id, int cantidad, int promocion_id ) {
         this.producto_id = producto_id;
         this.cantidad = cantidad;
+        this.promocion_id = promocion_id;
         this.venta_id = 0;
     }
 
@@ -32,14 +34,18 @@ public class DetalleVenta {
         m_conexion = Conexion.getInstancia();
     }
 
-    public DetalleVenta(int producto_id, int cantidad) {
+    public DetalleVenta(int producto_id, int cantidad, int promocion_id) {
         m_conexion = Conexion.getInstancia();
         this.producto_id = producto_id;
         this.cantidad = cantidad;
+        this.promocion_id = promocion_id;
     }
 
     public void setIDVenta(int venta_id) {
         this.venta_id = venta_id;
+    }
+    public void setIDPromocion(int promocion_id) {
+        this.promocion_id = promocion_id;
     }
 
     public int getProducto_id() {
@@ -53,6 +59,9 @@ public class DetalleVenta {
     public int getCantidad() {
         return cantidad;
     }
+    public int getPromocion_id() {
+        return promocion_id;
+    }
 
     public void registrar() {
         m_conexion = Conexion.getInstancia();
@@ -61,12 +70,13 @@ public class DetalleVenta {
 
         // Preparo la consulta
         PreparedStatement ps = null;
-        String query = "INSERT INTO detalles_ventas (venta_id,producto_id,cantidad) values (?,?,?)";
+        String query = "INSERT INTO detalles_ventas (venta_id,producto_id,cantidad,promocion_id) values (?,?,?,?)";
         try {
             ps = con.prepareStatement(query);
             ps.setInt(1, this.venta_id);
             ps.setInt(2, this.producto_id);
             ps.setInt(3, cantidad);
+            ps.setInt(4, this.promocion_id);
             ps.executeUpdate();
             con.close();
         } catch (SQLException e) {
